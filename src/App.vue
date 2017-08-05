@@ -1,11 +1,25 @@
 <template>
   <div>
-    <div>
-      <CurrentTime></CurrentTime>
-    </div>
-    <div>
-      <b-badge>{{diffMin}}:{{this.diffSec}}</b-badge>
-    </div>
+    <b-card class="clock" header="Pomodoro Clock" header-variant="success">
+      <div>
+        <CurrentTime></CurrentTime>
+      </div>
+      <div>
+        <b-badge class="table-btn" variant="success">
+          -
+        </b-badge>
+        <b-badge class="table-center">
+          {{diffMin}}
+          :
+          {{this.diffSec}}
+          <br />
+          {{workTime}}
+        </b-badge>
+        <b-badge class="table-btn" variant="success">
+          +
+        </b-badge>
+      </div>
+    </b-card>
   </div>
 </template>
 
@@ -44,4 +58,20 @@ export default {
 </script>
 
 <style>
+.clock {
+  width: 500px;
+  margin: 100px auto;
+}
+.table {
+  width: 140px;
+  height: 50px;
+}
+.table-center {
+  width: 80px;
+  height: 50px;
+}
+.table-btn {
+  width: 30px;
+  height: 50px;
+}
 </style>
