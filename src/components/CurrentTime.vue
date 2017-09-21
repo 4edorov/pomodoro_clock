@@ -1,7 +1,10 @@
 <template>
   <div class="current-time">
     <b-badge class="table" variant="primary">
-      {{time}}<br />
+      Current time
+      <br />
+      {{time}}
+      <br />
       {{date}}
     </b-badge>
   </div>

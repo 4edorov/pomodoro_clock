@@ -9,11 +9,13 @@
           -
         </b-badge>
         <b-badge class="table-center">
+          Session time
+          <br />
           {{diffMin}}
           :
-          {{this.diffSec}}
+          {{diffSec}}
           <br />
-          {{workTime}}
+          {{workTime}} min(s)
         </b-badge>
         <b-badge class="table-btn" variant="success">
           +
@@ -33,7 +35,7 @@ export default {
   },
   data () {
     return {
-      workTime: 1,
+      workTime: 25,
       diffMin: '',
       diffSec: '',
       currentTime: Date.now(),
@@ -47,8 +49,8 @@ export default {
     restWorkTime () {
       let completitionTime = this.currentTime + this.workTime * 60 * 1000
       let diffTime = completitionTime - Date.now()
-      this.diffMin = Math.floor(diffTime / 1000 / 60)
-      this.diffSec = Math.floor(diffTime / 1000 % 60)
+      this.diffMin = ('0' + Math.floor(diffTime / 1000 / 60)).substr(-2)
+      this.diffSec = ('0' + Math.floor(diffTime / 1000 % 60)).substr(-2)
       if (this.diffMin === 0 && this.diffSec === 0) {
         clearInterval(this.workInt)
       }
