@@ -4,10 +4,10 @@
       <div>
         <div class="row">
           <div>
-            <b-button v-if="sessionInt" class="table" variant="success">
+            <b-button v-if="sessionState" class="table" variant="warning" @click="startOrPause">
               <i class="fa fa-pause fa-2x"></i>
             </b-button>
-            <b-button v-else class="table" variant="success" @click="start">
+            <b-button v-else class="table" variant="success" @click="startOrPause">
               <i class="fa fa-play fa-2x"></i>
             </b-button>
           </div>
@@ -15,7 +15,7 @@
             <CurrentTime></CurrentTime>
           </div>
           <div>
-            <b-button class="table" variant="success" @click="stop">
+            <b-button class="table" variant="danger" @click="stop">
               <i class="fa fa-stop fa-2x"></i>
             </b-button>
           </div>
@@ -89,25 +89,60 @@ export default {
       sessionDiffMin: '',
       sessionDiffSec: '',
       sessionInt: '',
-      currentTime: Date.now(),
       breakTime: 5,
       breakCurrentTime: 0,
       breakDiffMin: '',
       breakDiffSec: '',
       breakInt: '',
-      circles: 1
+      circles: 1,
+      sessionState: false,
+      breakState: false
     }
   },
 
   methods: {
-    start () {
-      this.circles -= 1
-      this.sessionInt = setInterval(this.sessionTimer, 1000)
+    startOrPause () {
+      if (!this.circles && !this.sessionCurrentTime) {
+        return
+      }
+      if (!this.sessionState && !this.breakState) {
+        this.sessionState = true
+        this.breakState = true
+
+        if (!this.sessionCurrentTime) {
+          this.circles -= 1
+        }
+
+        this.sessionInt = setInterval(this.sessionTimer, 1000)
+      } else if (this.sessionState && this.breakState && this.sessionCurrentTime) {
+        this.sessionState = false
+        clearInterval(this.sessionInt)
+      } else if (this.sessionState && !this.sessionCurrentTime && !this.breakState) {
+        this.circles -= 1
+
+        this.breakState = true
+        this.sessionInt = setInterval(this.sessionTimer, 1000)
+      }
     },
 
     stop () {
       clearInterval(this.sessionInt)
-      console.log('sesInt', this.sessionInt)
+      clearInterval(this.breakInt)
+
+      this.sessionTime = 25
+      this.sessionCurrentTime = 0
+      this.sessionDiffMin = ''
+      this.sessionDiffSec = ''
+
+      this.breakTime = 5
+      this.breakCurrentTime = 0
+      this.breakDiffMin = ''
+      this.breakDiffSec = ''
+
+      this.circles = 1
+
+      this.sessionState = false
+      this.breakState = false
     },
 
     sessionTimer () {
@@ -115,6 +150,14 @@ export default {
       let sessionDiffTime = this.sessionTime * 60 * 1000 - this.sessionCurrentTime
       this.sessionDiffMin = ('0' + Math.floor(sessionDiffTime / 1000 / 60)).substr(-2)
       this.sessionDiffSec = ('0' + Math.floor(sessionDiffTime / 1000 % 60)).substr(-2)
+
+      if (sessionDiffTime === 0 && this.circles > 0) {
+        this.breakInt = setInterval(this.breakTimer, 1000)
+        clearInterval(this.sessionInt)
+        this.sessionCurrentTime = 0
+      } else if (sessionDiffTime === 0 && this.circles === 0) {
+        this.stop
+      }
     },
 
     breakTimer () {
@@ -122,6 +165,13 @@ export default {
       let breakDiffTime = this.breakTime * 60 * 1000 - this.breakCurrentTime
       this.breakDiffMin = ('0' + Math.floor(breakDiffTime / 1000 / 60)).substr(-2)
       this.breakDiffSec = ('0' + Math.floor(breakDiffTime / 1000 % 60)).substr(-2)
+
+      if (breakDiffTime === 0) {
+        clearInterval(this.breakInt)
+        this.breakCurrentTime = 0
+        this.breakState = false
+        this.startOrPause()
+      }
     },
 
     setIntervals (timer, shift) {
