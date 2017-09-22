@@ -4,7 +4,7 @@
       <div>
         <div class="row">
           <div>
-            <b-button v-if="sessionState" class="table" variant="warning" @click="startOrPause">
+            <b-button v-if="sessionInt" class="table" variant="warning" @click="startOrPause">
               <i class="fa fa-pause fa-2x"></i>
             </b-button>
             <b-button v-else class="table" variant="success" @click="startOrPause">
@@ -105,24 +105,38 @@ export default {
       if (!this.circles && !this.sessionCurrentTime) {
         return
       }
-      if (!this.sessionState && !this.breakState) {
-        this.sessionState = true
-        this.breakState = true
-
-        if (!this.sessionCurrentTime) {
-          this.circles -= 1
-        }
-
-        this.sessionInt = setInterval(this.sessionTimer, 1000)
-      } else if (this.sessionState && this.breakState && this.sessionCurrentTime) {
-        this.sessionState = false
-        clearInterval(this.sessionInt)
-      } else if (this.sessionState && !this.sessionCurrentTime && !this.breakState) {
+      if (!this.sessionInt && !this.breakInt) {
         this.circles -= 1
-
-        this.breakState = true
         this.sessionInt = setInterval(this.sessionTimer, 1000)
+        this.sessionState = true
+        this.breakState = false
+      } else if (this.sessionInt && this.breakInt && !this.sessionState && !this.breakState && !this.breakCurrentTime) {
+        this.circles -= 1
+        this.sessionInt = setInterval(this.sessionTimer, 1000)
+        this.sessionState = true
+        this.breakState = false
+      } else if (this.breakCurrentTime && this.breakState && !this.sessionState) {
+        clearInterval(this.breakInt)
+        this.breakState = false
+      } else if (this.sessionCurrentTime && this.sessionState && !this.breakState) {
+        clearInterval(this.sessionInt)
+        this.sessionState = false
+      } else if (this.breakCurrentTime && !this.breakState && !this.sessionState) {
+        this.breakInt = setInterval(this.breakTimer, 1000)
+        this.breakState = true
+      } else if (this.sessionCurrentTime && !this.sessionState && !this.breakState) {
+        this.sessionInt = setInterval(this.sessionTimer, 1000)
+        this.sessionState = true
       }
+      // else if (this.sessionInt && this.breakInt) {
+      //   this.sessionState = false
+      //   clearInterval(this.sessionInt)
+      // } else if (this.sessionState && !this.sessionCurrentTime && !this.breakState) {
+      //   this.circles -= 1
+      //
+      //   this.breakState = true
+      //   this.sessionInt = setInterval(this.sessionTimer, 1000)
+      // }
     },
 
     stop () {
@@ -141,6 +155,8 @@ export default {
 
       this.circles = 1
 
+      this.sessionInt = ''
+      this.breakInt = ''
       this.sessionState = false
       this.breakState = false
     },
@@ -152,11 +168,14 @@ export default {
       this.sessionDiffSec = ('0' + Math.floor(sessionDiffTime / 1000 % 60)).substr(-2)
 
       if (sessionDiffTime === 0 && this.circles > 0) {
-        this.breakInt = setInterval(this.breakTimer, 1000)
         clearInterval(this.sessionInt)
+        this.sessionState = false
         this.sessionCurrentTime = 0
+
+        this.breakInt = setInterval(this.breakTimer, 1000)
+        this.breakState = true
       } else if (sessionDiffTime === 0 && this.circles === 0) {
-        this.stop
+        this.stop()
       }
     },
 
@@ -168,8 +187,9 @@ export default {
 
       if (breakDiffTime === 0) {
         clearInterval(this.breakInt)
-        this.breakCurrentTime = 0
         this.breakState = false
+        this.breakCurrentTime = 0
+
         this.startOrPause()
       }
     },
