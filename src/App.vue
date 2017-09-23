@@ -4,7 +4,7 @@
       <div>
         <div class="row">
           <div>
-            <b-button v-if="sessionInt" class="table" variant="warning" @click="startOrPause">
+            <b-button v-if="sessionState || breakState" class="table" variant="warning" @click="startOrPause">
               <i class="fa fa-pause fa-2x"></i>
             </b-button>
             <b-button v-else class="table" variant="success" @click="startOrPause">
@@ -22,7 +22,7 @@
         </div>
         <div class="row">
           <div class="row">
-            <b-button class="table-btn" variant="success" @click="setIntervals('session', 'minus')">
+            <b-button class="table-btn" variant="success" @click="setIntervals('session', 'minus')" :disabled="!!sessionInt">
               <i class="fa fa-minus"></i>
             </b-button>
             <b-badge class="table-center">
@@ -34,12 +34,12 @@
               <br />
               {{sessionTime}} min(s)
             </b-badge>
-            <b-button class="table-btn" variant="success" @click="setIntervals('session', 'plus')">
+            <b-button class="table-btn" variant="success" @click="setIntervals('session', 'plus')" :disabled="!!sessionInt">
               <i class="fa fa-plus"></i>
             </b-button>
           </div>
           <div class="row">
-            <b-button class="table-btn" variant="success" @click="setIntervals('circle', 'minus')">
+            <b-button class="table-btn" variant="success" @click="setIntervals('circle', 'minus')" :disabled="!!sessionInt">
               <i class="fa fa-minus"></i>
             </b-button>
             <b-badge class="table-center">
@@ -47,12 +47,12 @@
               <br />
               {{circles}}
             </b-badge>
-            <b-button class="table-btn" variant="success" @click="setIntervals('circle', 'plus')">
+            <b-button class="table-btn" variant="success" @click="setIntervals('circle', 'plus')" :disabled="!!sessionInt">
               <i class="fa fa-plus"></i>
             </b-button>
           </div>
           <div class="row">
-            <b-button class="table-btn" variant="success" @click="setIntervals('break', 'minus')">
+            <b-button class="table-btn" variant="success" @click="setIntervals('break', 'minus')" :disabled="!!sessionInt">
               <i class="fa fa-minus"></i>
             </b-button>
             <b-badge class="table-center">
@@ -64,11 +64,15 @@
               <br />
               {{breakTime}} min(s)
             </b-badge>
-            <b-button class="table-btn" variant="success" @click="setIntervals('break', 'plus')">
+            <b-button class="table-btn" variant="success" @click="setIntervals('break', 'plus')" :disabled="!!sessionInt">
               <i class="fa fa-plus"></i>
             </b-button>
           </div>
         </div>
+      </div>
+      <div slot="footer">
+        <b-badge v-if="sessionInt" variant="success">On</b-badge>
+        <b-badge v-else variant="danger">Off</b-badge>
       </div>
     </b-card>
   </div>
@@ -84,12 +88,12 @@ export default {
   },
   data () {
     return {
-      sessionTime: 25,
+      sessionTime: 1,
       sessionCurrentTime: 0,
       sessionDiffMin: '',
       sessionDiffSec: '',
       sessionInt: '',
-      breakTime: 5,
+      breakTime: 1,
       breakCurrentTime: 0,
       breakDiffMin: '',
       breakDiffSec: '',
@@ -105,12 +109,8 @@ export default {
       if (!this.circles && !this.sessionCurrentTime) {
         return
       }
-      if (!this.sessionInt && !this.breakInt) {
-        this.circles -= 1
-        this.sessionInt = setInterval(this.sessionTimer, 1000)
-        this.sessionState = true
-        this.breakState = false
-      } else if (this.sessionInt && this.breakInt && !this.sessionState && !this.breakState && !this.breakCurrentTime) {
+      if ((this.sessionInt && this.breakInt && !this.sessionState && !this.breakState && !this.breakCurrentTime && !this.sessionCurrentTime) || // call by breakTimer
+        (!this.sessionInt && !this.breakInt)) { // first call
         this.circles -= 1
         this.sessionInt = setInterval(this.sessionTimer, 1000)
         this.sessionState = true
@@ -128,15 +128,6 @@ export default {
         this.sessionInt = setInterval(this.sessionTimer, 1000)
         this.sessionState = true
       }
-      // else if (this.sessionInt && this.breakInt) {
-      //   this.sessionState = false
-      //   clearInterval(this.sessionInt)
-      // } else if (this.sessionState && !this.sessionCurrentTime && !this.breakState) {
-      //   this.circles -= 1
-      //
-      //   this.breakState = true
-      //   this.sessionInt = setInterval(this.sessionTimer, 1000)
-      // }
     },
 
     stop () {
@@ -231,16 +222,18 @@ export default {
   margin: 100px auto;
 }
 .table {
-  width: 140px;
-  height: 50px;
+  width: 150px;
+  height: 47px;
 }
 .table-center {
   width: 80px;
-  height: 50px;
+  height: 47px;
+  margin: 0 5px;
 }
 .table-btn {
   width: 30px;
-  height: 50px;
+  height: 47px;
+  padding: 8px;
 }
 .row {
   display: flex;
