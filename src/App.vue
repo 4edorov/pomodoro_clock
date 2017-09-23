@@ -80,6 +80,8 @@
 
 <script>
 import CurrentTime from './components/CurrentTime'
+const endAudio = require('./assets/audio/end.mp3')
+const startAudio = require('./assets/audio/start.mp3')
 
 export default {
   name: 'app',
@@ -88,12 +90,12 @@ export default {
   },
   data () {
     return {
-      sessionTime: 1,
+      sessionTime: 25,
       sessionCurrentTime: 0,
       sessionDiffMin: '',
       sessionDiffSec: '',
       sessionInt: '',
-      breakTime: 1,
+      breakTime: 5,
       breakCurrentTime: 0,
       breakDiffMin: '',
       breakDiffSec: '',
@@ -115,6 +117,7 @@ export default {
         this.sessionInt = setInterval(this.sessionTimer, 1000)
         this.sessionState = true
         this.breakState = false
+        startAudio && new Audio(startAudio).play()
       } else if (this.breakCurrentTime && this.breakState && !this.sessionState) {
         clearInterval(this.breakInt)
         this.breakState = false
@@ -165,7 +168,9 @@ export default {
 
         this.breakInt = setInterval(this.breakTimer, 1000)
         this.breakState = true
+        endAudio && new Audio(endAudio).play()
       } else if (sessionDiffTime === 0 && this.circles === 0) {
+        endAudio && new Audio(endAudio).play()
         this.stop()
       }
     },
