@@ -9,7 +9,7 @@
     "start": "node build/dev-server.js",
     "build": "node build/build.js",
     "lint": "eslint --ext .js,.vue src",
-    "deploy": "node build/build.js&&gh-pages -d build"
+    "deploy": "node build/build.js&&gh-pages -d dist"
   },
   "homepage": "https://4edorov.github.io/pomodoro_clock/",
   "dependencies": {
