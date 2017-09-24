@@ -2,7 +2,7 @@
   <div>
     <b-card class="clock" header="Pomodoro Clock" header-variant="success">
       <div>
-        <div class="row">
+        <div class="row-disp">
           <div>
             <b-button v-if="sessionState || breakState" class="table-big" variant="warning" @click="startOrPause">
               <i class="fa fa-pause fa-2x"></i>
@@ -20,7 +20,7 @@
             </b-button>
           </div>
         </div>
-        <div class="row">
+        <div class="row-disp">
           <div class="btns-table">
             <b-button class="table-btn" variant="success" @click="setIntervals('session', 'minus')" :disabled="!!sessionInt">
               <i class="fa fa-minus"></i>
@@ -241,7 +241,7 @@ export default {
   height: 47px;
   padding: 8px;
 }
-.row {
+.row-disp {
   display: flex;
   justify-content: space-around;
   padding: 5px;
