@@ -21,11 +21,11 @@
           </div>
         </div>
         <div class="row">
-          <div class="row">
+          <div class="btns-table">
             <b-button class="table-btn" variant="success" @click="setIntervals('session', 'minus')" :disabled="!!sessionInt">
               <i class="fa fa-minus"></i>
             </b-button>
-            <b-badge class="table-center">
+            <b-badge variant="info" class="table-center">
               Session time
               <br />
               {{sessionDiffMin}}
@@ -38,11 +38,11 @@
               <i class="fa fa-plus"></i>
             </b-button>
           </div>
-          <div class="row">
+          <div class="btns-table">
             <b-button class="table-btn" variant="success" @click="setIntervals('circle', 'minus')" :disabled="!!sessionInt">
               <i class="fa fa-minus"></i>
             </b-button>
-            <b-badge class="table-center">
+            <b-badge variant="info" class="table-center">
               Circles
               <br />
               {{circles}}
@@ -51,11 +51,11 @@
               <i class="fa fa-plus"></i>
             </b-button>
           </div>
-          <div class="row">
+          <div class="btns-table">
             <b-button class="table-btn" variant="success" @click="setIntervals('break', 'minus')" :disabled="!!sessionInt">
               <i class="fa fa-minus"></i>
             </b-button>
-            <b-badge class="table-center">
+            <b-badge variant="info" class="table-center">
               Break time
               <br />
               {{breakDiffMin}}
@@ -197,7 +197,7 @@ export default {
           this.sessionTime = Math.max(this.sessionTime, 1)
         } else {
           this.sessionTime += 1
-          this.sessionTime = Math.min(this.sessionTime, 25)
+          this.sessionTime = Math.min(this.sessionTime, 60)
         }
       } else if (timer === 'break') {
         if (shift === 'minus') {
@@ -205,7 +205,7 @@ export default {
           this.breakTime = Math.max(this.breakTime, 1)
         } else {
           this.breakTime += 1
-          this.breakTime = Math.min(this.breakTime, 10)
+          this.breakTime = Math.min(this.breakTime, 15)
         }
       } else {
         if (shift === 'minus') {
@@ -229,19 +229,26 @@ export default {
 .table {
   width: 150px;
   height: 47px;
+  margin: 0px;
 }
 .table-center {
-  width: 80px;
+  width: 83px;
   height: 47px;
   margin: 0 5px;
 }
 .table-btn {
-  width: 30px;
+  width: 29px;
   height: 47px;
   padding: 8px;
 }
 .row {
   display: flex;
   justify-content: space-around;
+  padding: 5px;
+  width: 100%;
+  margin: auto;
+}
+.btns-table {
+  display: flex;
 }
 </style>

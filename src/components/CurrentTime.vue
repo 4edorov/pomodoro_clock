@@ -1,5 +1,5 @@
 <template>
-  <div class="current-time">
+  <div>
     <b-badge class="table" variant="primary">
       Current time
       <br />
