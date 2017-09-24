@@ -4,10 +4,10 @@
       <div>
         <div class="row">
           <div>
-            <b-button v-if="sessionState || breakState" class="table" variant="warning" @click="startOrPause">
+            <b-button v-if="sessionState || breakState" class="table-big" variant="warning" @click="startOrPause">
               <i class="fa fa-pause fa-2x"></i>
             </b-button>
-            <b-button v-else class="table" variant="success" @click="startOrPause">
+            <b-button v-else class="table-big" variant="success" @click="startOrPause">
               <i class="fa fa-play fa-2x"></i>
             </b-button>
           </div>
@@ -15,7 +15,7 @@
             <CurrentTime></CurrentTime>
           </div>
           <div>
-            <b-button class="table" variant="danger" @click="stop">
+            <b-button class="table-big" variant="danger" @click="stop">
               <i class="fa fa-stop fa-2x"></i>
             </b-button>
           </div>
@@ -226,7 +226,7 @@ export default {
   width: 500px;
   margin: 100px auto;
 }
-.table {
+.table-big {
   width: 150px;
   height: 47px;
   margin: 0px;

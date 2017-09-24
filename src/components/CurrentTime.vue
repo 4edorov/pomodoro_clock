@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-badge class="table" variant="primary">
+    <b-badge class="table-big" variant="primary">
       Current time
       <br />
       {{time}}
