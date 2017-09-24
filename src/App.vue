@@ -239,7 +239,7 @@ export default {
 .table-btn {
   width: 29px;
   height: 47px;
-  padding: 8px;
+  padding: 8px !important;
 }
 .row-disp {
   display: flex;
